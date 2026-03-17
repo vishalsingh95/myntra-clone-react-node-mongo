@@ -12,6 +12,15 @@ import Men from "./pages/Men";
 import Women from "./pages/Women";
 import Kids from "./pages/Kids";
 import Accessories from "./pages/Accessories";
+import HomeAndLiving from "./pages/HomeAndLiving";
+import Beauty from "./pages/Beauty";
+import Studio from "./pages/Studio";
+import Trending from "./pages/Trending";
+import Settings from "./pages/Settings";
+import Support from "./pages/Support";
+import Feedback from "./pages/Feedback";
+import Faq from "./pages/Faq";
+import Logout from "./pages/Logout";
 
 
 
@@ -33,6 +42,15 @@ function App() {
         <Route path="/women" element={<Women />} />
         <Route path="/kids" element={<Kids />} /> 
         <Route path="/accessories" element={<Accessories />} />
+        <Route path="/home-living" element={<HomeAndLiving />} />
+        <Route path="/beauty" element={<Beauty />} />
+        <Route path="/studio" element={<Studio />} />
+        <Route path="/trending" element={<Trending />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/logout" element={<Logout />} />
         {/* Add more routes as needed */}
         
 

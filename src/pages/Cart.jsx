@@ -1,131 +1,214 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaShoppingCart } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
-import { selectCartItems } from '../redux/cartSlice';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeFromCart,
+  selectCartItems,
+  setCartItemQuantity,
+} from "../redux/cartSlice";
+import { toast } from "react-toastify";
+import { formatCurrency } from "../utils/formatCurrency";
 import "../pages/Styles/Cart.css";
 
 
 const Cart = () => {
-
+  const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(Boolean(token));
   }, []);
 
+  const totals = useMemo(() => {
+    const itemsCount = cartItems.reduce(
+      (acc, i) => acc + Number(i.quantity ?? 1),
+      0
+    );
+
+    // Myntra-like summary (approx) — if you store `mrp`, use it; else infer a display MRP.
+    const total = cartItems.reduce((acc, i) => {
+      const price = Number(i.price ?? 0);
+      const qty = Number(i.quantity ?? 1);
+      return acc + price * qty;
+    }, 0);
+
+    const totalMrp = cartItems.reduce((acc, i) => {
+      const price = Number(i.price ?? 0);
+      const qty = Number(i.quantity ?? 1);
+      const mrp = Number(i.mrp ?? price * 1.4);
+      return acc + mrp * qty;
+    }, 0);
+
+    const discount = Math.max(0, totalMrp - total);
+    const platformFee = itemsCount > 0 ? 20 : 0;
+    const shippingFee = total >= 799 || itemsCount === 0 ? 0 : 49;
+    const payable = Math.max(0, total + platformFee + shippingFee);
+
+    return {
+      itemsCount,
+      total,
+      totalMrp,
+      discount,
+      platformFee,
+      shippingFee,
+      payable,
+    };
+  }, [cartItems]);
+
   const handleCheckout = () => {
+    if (!cartItems.length) return;
     if (!isLoggedIn) {
-      toast.error('Please log in to proceed to checkout');
-      navigate('/login');
-    } else {
-      navigate('/checkout');
+      toast.error("Please log in to proceed to checkout");
+      navigate("/login");
+      return;
     }
+    navigate("/checkout");
   };
-
-  let totalPrice = 0;
-  cartItems.forEach(item => {
-    totalPrice += item.price * item.quantity;
-  });
-
-  let totalItems = 0;
-  cartItems.forEach(item => {
-    totalItems += item.quantity;
-  });
 
   const handleRemove = (id) => {
-    // Implement remove from cart functionality here
-    toast.info('Item removed from cart');
+    dispatch(removeFromCart(id));
+    toast.info("Removed from bag");
   };
 
-  const handleQuantityChange = (id, quantity) => {
-    // Implement quantity change functionality here
-    toast.info('Cart updated');
+  const handleQuantityChange = (id, nextQty) => {
+    dispatch(setCartItemQuantity({ id, quantity: nextQty }));
+    toast.success("Updated quantity");
+  };
+
+  if (!cartItems.length) {
+    return (
+      <div className="cart cart-page">
+        <div className="cart-empty">
+          <h2>Your bag is empty</h2>
+          <p>Add items to your bag to see them here.</p>
+          <Link className="cart-primary-link" to="/">
+            Continue shopping
+          </Link>
+        </div>
+      </div>
+    );
   }
-
-  const handleContinueShopping = () => {
-    navigate('/');
-  }
-
-
 
   return (
-    <div className="col-md-6 offset-md-3 mt-5 bg-gray-100 p-4 rounded shadow min-h-screen flex flex-col items-center justify-center">
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 rounded shadow w-full max-w-2xl ">
-    <div className="cart p-4 bg-white shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Your Shopping Cart</h2>
+    <div className="cart cart-page">
+      <div className="cart-shell">
+        <div className="cart-left">
+          <div className="cart-header">
+            <h2>My Bag</h2>
+            <span className="cart-subtitle">{totals.itemsCount} items</span>
+          </div>
 
-      <div className="cart-item flex items-center gap-4 mb-4">
-        <img src={cartItems[0]?.image} alt="Product" className="w-24 h-24 object-cover rounded" />
-        <div>
-          <h3 className="text-lg font-medium">{cartItems[0]?.name}</h3>
-          <p className="text-sm text-gray-600">₹{cartItems[0]?.price.toFixed(2)}</p>
-          <p className="text-lg font-bold">Quantity: {cartItems[0]?.quantity}</p>
+          <div className="cart-items">
+            {cartItems.map((item) => {
+              const id = item.id ?? item._id;
+              const qty = Number(item.quantity ?? 1);
+              const title = item.name ?? item.title ?? "Product";
+              const image = item.image ?? item.img ?? item.thumbnail;
+              const price = Number(item.price ?? 0);
 
+              return (
+                <div key={id} className="cart-row">
+                  <div className="cart-row-image">
+                    {image ? (
+                      <img src={image} alt={title} />
+                    ) : (
+                      <div className="cart-image-fallback" />
+                    )}
+                  </div>
+
+                  <div className="cart-row-main">
+                    <div className="cart-row-title">{title}</div>
+                    <div className="cart-row-meta">
+                      <span className="cart-row-price">
+                        {formatCurrency(price)}
+                      </span>
+                      <span className="cart-row-dot">•</span>
+                      <span className="cart-row-qtylabel">Qty</span>
+                      <select
+                        className="cart-qty"
+                        value={qty}
+                        onChange={(e) =>
+                          handleQuantityChange(id, Number(e.target.value))
+                        }
+                      >
+                        {Array.from({ length: 10 }, (_, i) => i + 1).map(
+                          (n) => (
+                            <option key={n} value={n}>
+                              {n}
+                            </option>
+                          )
+                        )}
+                      </select>
+                    </div>
+
+                    <div className="cart-row-actions">
+                      <button
+                        type="button"
+                        className="cart-linklike"
+                        onClick={() => handleRemove(id)}
+                      >
+                        REMOVE
+                      </button>
+                      <Link className="cart-linklike" to="/wishlist">
+                        MOVE TO WISHLIST
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
-        <button className="ml-auto bg-red-500 text-white px-3 py-1 rounded" onClick={() => handleRemove(cartItems[0]?.id)}>
-          Remove
-        </button>
+
+        <aside className="cart-right">
+          <div className="price-card">
+            <div className="price-title">PRICE DETAILS</div>
+            <div className="price-row">
+              <span>Total MRP</span>
+              <span>{formatCurrency(totals.totalMrp)}</span>
+            </div>
+            <div className="price-row price-row-discount">
+              <span>Discount on MRP</span>
+              <span>-{formatCurrency(totals.discount)}</span>
+            </div>
+            <div className="price-row">
+              <span>Platform Fee</span>
+              <span>{formatCurrency(totals.platformFee)}</span>
+            </div>
+            <div className="price-row">
+              <span>Shipping Fee</span>
+              <span>
+                {totals.shippingFee === 0
+                  ? "FREE"
+                  : formatCurrency(totals.shippingFee)}
+              </span>
+            </div>
+            <div className="price-divider" />
+            <div className="price-row price-total">
+              <span>Total Amount</span>
+              <span>{formatCurrency(totals.payable)}</span>
+            </div>
+
+            <button
+              type="button"
+              className="place-order"
+              onClick={handleCheckout}
+            >
+              PLACE ORDER
+            </button>
+
+            <div className="cart-secondary-links">
+              <Link to="/">Continue shopping</Link>
+              <Link to="/orders">View orders</Link>
+            </div>
+          </div>
+        </aside>
       </div>
-      
-    </div>
-    <div className="total mt-4 p-4 bg-white shadow-md w-full flex items-center justify-between">
-      <h3 className="text-lg font-medium">Total: ₹{totalPrice.toFixed(2)}</h3>
-      <button onClick={handleCheckout} className="mt-2 bg-green-500 text-white px-4 py-2 rounded">Proceed to Checkout</button>  
-    </div>
-
-    <div className="total mt-4 p-4 bg-white shadow-md w-full flex items-center justify-between ">
-      <h3 className="text-lg font-medium mt-4 ">Total Items: {totalItems}</h3>
-    </div>
-    </div>
-
-      <div className="flex flex-col items-center justify-center mt-4 gap-4 w-full max-w-md ">
-        <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded ">
-          <Link to="/"   className="text-blue-500 hover:underline mt-4 ">Continue Shopping</Link>
-        </div>
-
-          <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded">
-            <Link to="/orders" className="text-blue-500 hover:underline mt-4">View Orders</Link>
-          </div>
-          <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded">
-            <Link to="/wishlist" className="text-blue-500 hover:underline mt-4">View Wishlist</Link>
-          </div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center mt-4 gap-4 w-full max-w-md ">
-        <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded ">
-          <Link to="/profile" className="text-blue-500 hover:underline mt-4">View Profile</Link>
-        </div>
-          <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded">
-            <Link to="/settings" className="text-blue-500 hover:underline mt-4">Account Settings</Link>
-          </div>
-          <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded">
-            <Link to="/support" className="text-blue-500 hover:underline mt-4">Customer Support</Link>
-          </div>
-          <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded">
-            <Link to="/feedback" className="text-blue-500 hover:underline mt-4">Give Feedback</Link>
-          </div>
-          <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded"> 
-            <Link to="/faq" className="text-blue-500 hover:underline mt-4">FAQ</Link>
-          </div>
-          <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded">
-            <Link to="/logout" className="text-blue-500 hover:underline mt-4">Logout</Link>
-          </div>
-          <div className="mt-4 text-center w-full bg-white p-4 shadow-md rounded">
-            <Link to="/home" className="text-blue-500 hover:underline mt-4">Back to Home</Link>
-          </div>
-
-      </div>
-
     </div>
   );
-}
+};
 
 export default Cart;
