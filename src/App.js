@@ -21,6 +21,7 @@ import Support from "./pages/Support";
 import Feedback from "./pages/Feedback";
 import Faq from "./pages/Faq";
 import Logout from "./pages/Logout";
+import Admin from "./pages/Admin";
 
 
 
@@ -51,6 +52,7 @@ function App() {
         <Route path="/feedback" element={<Feedback />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/logout" element={<Logout />} />
+        <Route path="/admin" element={<Admin />} />
         {/* Add more routes as needed */}
         
 
