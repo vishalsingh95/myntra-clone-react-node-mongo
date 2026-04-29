@@ -1,4 +1,4 @@
-import "./ProductCard.css";
+import "./ProductCard.css"
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillHeart } from "react-icons/ai";
 import { BiShoppingBag } from "react-icons/bi";
@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cartSlice";
 import { addToWishlist } from "../../redux/features/wishlistSlice";
 import { useState } from "react";
+
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
@@ -17,14 +18,12 @@ const ProductCard = ({ product }) => {
     e.stopPropagation();
     dispatch(addToCart(product));
     toast.success("Item added to cart");
-    navigate("/cart");
   };
 
   const handleAddToWishlist = (e) => {
     e.stopPropagation();
     dispatch(addToWishlist(product));
     toast.success("Item added to wishlist");
-    navigate("/wishlist");
   };
 
   const handleBuyNow = () => {

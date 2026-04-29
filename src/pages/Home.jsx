@@ -4,6 +4,7 @@ import Banner from "../components/Banner/Banner";
 import Categories from "../components/Categories/Categories";
 import { Link } from "react-router-dom";
 
+
 const trendingProducts = [
   { img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&q=80", brand: "Roadster", name: "Men Printed T-Shirt", price: 799, mrp: 1299 },
   { img: "https://images.unsplash.com/photo-1618932260643-ee4a2f623032?w=500&q=80", brand: "Anouk", name: "Women Kurti", price: 999, mrp: 1999 },

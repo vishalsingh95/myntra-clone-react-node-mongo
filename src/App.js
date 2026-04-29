@@ -38,10 +38,16 @@ function App() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/orders" element={<OrderHistory />} /> 
-        <Route path="/men" element={<Men />} /> 
+        <Route path="/orders" element={<OrderHistory />} />
+        <Route path="/men" element={<Men />} />
         <Route path="/women" element={<Women />} />
-        <Route path="/kids" element={<Kids />} /> 
+        <Route path="/kids" element={<Kids />} />
+        <Route path="/support" element={<Support />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/men" element={<Men />} />
+        <Route path="/women" element={<Women />} />
+        <Route path="/kids" element={<Kids />} />
         <Route path="/accessories" element={<Accessories />} />
         <Route path="/home-living" element={<HomeAndLiving />} />
         <Route path="/beauty" element={<Beauty />} />
@@ -53,8 +59,7 @@ function App() {
         <Route path="/faq" element={<Faq />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/admin" element={<Admin />} />
-        {/* Add more routes as needed */}
-        
+
 
       </Routes>
     </BrowserRouter>

@@ -1,30 +1,29 @@
 import { createContext, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(
-    localStorage.getItem("token") ? true : false
+    localStorage.getItem("token") ? jwtDecode(localStorage.getItem("token")) : null
   );
 
   const login = (token) => {
     localStorage.setItem("token", token);
-    setUser(true);
+    setUser(jwtDecode(token));
   };
 
   const logout = () => {
     localStorage.removeItem("token");
-    setUser(false);
+    setUser(null);
   };
 
   const refreshAuth = () => {
     const token = localStorage.getItem("token");
-    setUser(token ? true : false);
+    setUser(token ? jwtDecode(token) : null);
   };
 
   const value = { user, login, logout, refreshAuth };
-
-  console.log("AuthContext value:", value); // Debugging log
 
   return (
     <AuthContext.Provider value={value}>
