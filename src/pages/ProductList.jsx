@@ -2,6 +2,9 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import Categories from "../components/Categories/Categories";
+import "./Styles.css";
+import React from "react";
+
 
 const ProductList = () => {
   const { category } = useParams();
@@ -9,34 +12,97 @@ const ProductList = () => {
   return (
     <>
       <Navbar/>
-
-      
-      <Categories />
-      <div className="px-8 mt-8">
-        <h2 className="text-2xl font-bold capitalize mb-6">
-          {category} Collection
-        </h2>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <div
-              key={item}
-              className="cursor-pointer hover:shadow-lg transition"
-            >
-              <img
-                src="/images/men.jpg"
-                alt="product"
-                className="w-full h-72 object-cover rounded"
-              />
-              <p className="mt-2 text-sm font-medium">
-                {category} T-Shirt
+      <div className="product-list-content bg-gray-100 min-h-screen p-8">
+        <div className="product-list-content-item bg-gray-100 min-h-screen">
+          <div className="product-list-content-item-text bg-gray-100 min-h-screen">
+            <h2 className="text-2xl font-bold capitalize mb-6">
+              {category} Collection
+              <p className="text-gray-600">
+                Explore the latest trends in {category}.
               </p>
-              <p className="font-bold text-sm">₹999</p>
-            </div>
-          ))}
+            </h2>
+            <p className="text-gray-600">
+              Discover the latest {category} products.
+            </p>
+            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              Shop Now
+            </button>
+            <p className="text-gray-600">
+              Browse our collection of {category} products.
+            </p>
+            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              Shop Now
+            </button>
+            <p className="text-gray-600">
+              Browse our collection of {category} products.
+            </p>
+            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              Shop Now
+            </button>
+          </div>
+          <div className="product-list-content-item-image bg-gray-100 min-h-screen">
+            <img src={`/images/${category}.jpg`} alt={category} className="w-full h-72 object-cover rounded" />
+            <p className="mt-2 text-sm font-medium">
+              {category} T-Shirt
+            </p>
+            <p className="font-bold text-sm">₹999</p>
+            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              Shop Now
+            </button>
+          </div>
+        </div>
+        <div className="product-list-content-item-image bg-gray-100 min-h-screen">
+          <img src={`/images/${category}.jpg`} alt={category} className="w-full h-72 object-cover rounded" />
+          <p className="mt-2 text-sm font-medium">
+            {category} T-Shirt
+          </p>
+          <p className="font-bold text-sm">₹999</p>
+          <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Shop Now
+          </button>
+        </div>
+        <div className="product-list-content-item-image bg-gray-100 min-h-screen">
+          <img src={`/images/${category}.jpg`} alt={category} className="w-full h-72 object-cover rounded" />
+          <p className="mt-2 text-sm font-medium">
+            {category} T-Shirt
+          </p>
+          <p className="font-bold text-sm">₹999</p>
+          <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Shop Now
+          </button>
+        </div>
+        <div className="product-list-content-item-image bg-gray-100 min-h-screen">
+          <img src={`/images/${category}.jpg`} alt={category} className="w-full h-72 object-cover rounded" />
+          <p className="mt-2 text-sm font-medium">
+            {category} T-Shirt
+          </p>
+          <p className="font-bold text-sm">₹999</p>
+          <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Shop Now
+          </button>
+        </div>
+        <div className="product-list-content-item-image bg-gray-100 min-h-screen">
+          <img src={`/images/${category}.jpg`} alt={category} className="w-full h-72 object-cover rounded" />
+          <p className="mt-2 text-sm font-medium">
+            {category} T-Shirt
+          </p>
+          <p className="font-bold text-sm">₹999</p>
+          <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Shop Now
+          </button>
+        </div>
+        <div className="product-list-content-item-image bg-gray-100 min-h-screen">
+          <img src={`/images/${category}.jpg`} alt={category} className="w-full h-72 object-cover rounded" />
+          <p className="mt-2 text-sm font-medium">
+            {category} T-Shirt
+          </p>
+          <p className="font-bold text-sm">₹999</p>
+          <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Shop Now
+          </button>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 };

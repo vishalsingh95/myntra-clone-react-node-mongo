@@ -2,6 +2,29 @@ import "./Banner.css";
 import { Link } from "react-router-dom";
 
 const Banner = () => {
+
+  const navigateToCategory = (category) => {
+    navigate(`/category?name=${encodeURIComponent(category)}`);
+  };
+
+  const navigateToProducts = (category) => {
+    navigate(`/products?category=${encodeURIComponent(category)}`);
+  };
+
+
+  useEffect(() => {
+    console.log("Banner")
+    const token = localStorage.getItem("token");
+    if (token) {
+      console.log("Banner token", token)
+    }
+  }, [
+    localStorage.getItem("token")
+  ]);
+
+
+
+
   return (
     <section className="banner">
       {/* Background Image */}
@@ -13,19 +36,18 @@ const Banner = () => {
 
       {/* Overlay */}
       <div className="banner-overlay flex items-center justify-center h-full w-full absolute top-0 left-0">
-        <div className=" banner-content text-center text-white p-4 rounded-lg">
+        <div className="text-center text-white p-4 rounded-lg">
           <h1 className="text-3xl font-bold mb-4">Summer Sale is Here!</h1>
           <p className="text-lg">Up to 50% off on top fashion brands</p>
 
-          <div className="banner-buttons mt-6 flex gap-4 justify-center ">
-            <Link to="/men" className="primary-btn">
+          <div className="mt-6 flex gap-4 justify-center ">
+            <Link to="/men" className="text-white px-6 py-2.5 rounded-full">
               Shop Men
             </Link>
-            <Link to="/women" className="secondary-btn">
+            <Link to="/women" className="text-black px-6 py-2.5 rounded-full">
               Shop Women
             </Link>
           </div>
-
         </div>
       </div>
 

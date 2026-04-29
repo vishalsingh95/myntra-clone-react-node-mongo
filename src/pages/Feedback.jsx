@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
 import "./Styles/SectionPage.css";
 
 export default function Feedback() {

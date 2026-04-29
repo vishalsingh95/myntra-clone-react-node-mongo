@@ -8,8 +8,9 @@ export default function Logout() {
   useEffect(() => {
     localStorage.removeItem("token");
     toast.info("Logged out");
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   }, [navigate]);
+
 
   return null;
 }
